@@ -71,3 +71,17 @@
 - [쓰기·읽기·저장·실패 흐름](structure/09-read-write-persistence-failure-flows.md)
 - [완성도·Unknown 관리](structure/10-completeness-and-unknowns.md)
 - [완전 구조 분석 템플릿](structure/11-full-architecture-analysis-template.md)
+
+
+## 제품 포렌식 — 설계 의도와 문제 해결 방식
+
+- [포렌식 분석 인덱스](forensics/README.md)
+- [tldraw 문제 해결 방식](forensics/01-tldraw-problem-solution.md)
+- [Excalidraw 문제 해결 방식](forensics/02-excalidraw-problem-solution.md)
+- [H5P 문제 해결 방식](forensics/03-h5p-problem-solution.md)
+- [Twine 문제 해결 방식](forensics/04-twine-problem-solution.md)
+- [Artsteps/Metasteps 문제 해결 방식](forensics/05-artsteps-problem-solution.md)
+- [동일 문제의 서로 다른 해법](forensics/06-same-problem-different-solution.md)
+- [문제 → 메커니즘 카탈로그](forensics/07-problem-mechanism-catalog.md)
+- [품질·테스트 전략](forensics/08-quality-testing-strategy.md)
+- [기능 → 메커니즘 지도](forensics/09-feature-capability-mechanism-map.md)
