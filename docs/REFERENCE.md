@@ -48,3 +48,18 @@
 이 저장소의 목적은 특정 서비스를 복제하는 것이 아니다.
 
 **좋은 구조를 분해하고 → 장단점을 이해하고 → 필요한 부분만 현재 서비스에 맞게 재구성하는 것**이 목적이다.
+
+
+## 전체 구조도
+
+앱·웹의 내부 관계를 최대한 전체적으로 보고 싶다면:
+
+- [구조도 레퍼런스](structure/README.md)
+- [tldraw 전체 구조](structure/01-tldraw-full-structure.md)
+- [Excalidraw 전체 구조](structure/02-excalidraw-full-structure.md)
+- [H5P 전체 구조](structure/03-h5p-full-structure.md)
+- [Twine 전체 구조](structure/04-twine-full-structure.md)
+- [Artsteps 관찰 가능 구조](structure/05-artsteps-observable-structure.md)
+- [5개 도구 전체 구조 비교](structure/06-cross-structure-map.md)
+
+구조도는 **제품 경계 → 저장소/모듈 → 데이터·상태 → 런타임 → 저장·공유·확장**의 5개 층으로 정리되어 있습니다.
