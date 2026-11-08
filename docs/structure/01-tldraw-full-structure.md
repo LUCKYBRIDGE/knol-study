@@ -408,3 +408,215 @@ Persistence / Sync adapters
 ```
 
 이다.
+
+
+# 15. 더 깊은 상태 수명주기 — Record Scope + Field Preservation
+
+tldraw은 단순히 record를 document/session/presence로 나누는 데서 끝나지 않는다.
+
+## RecordType scope
+
+공식 Store 문서와 실제 record 정의:
+
+```text
+document scope
+  persisted + synced
+
+session scope
+  per instance/tab
+  persist될 수 있으나 sync 대상 아님
+
+presence scope
+  synced
+  장기 persistence 대상 아님
+```
+
+실제:
+- `TLDocument` → `scope: 'document'`
+- `TLCamera` → `scope: 'session'`
+- `TLPointer` → `scope: 'session'`
+- `TLInstance` → `scope: 'session'`
+- `TLInstancePresence` → `scope: 'presence'`
+
+## TLInstance 안에서도 다시 보존 정책을 갖는다
+
+`TLInstance.ts`에는 `shouldKeyBePreservedBetweenSessions`가 존재한다.
+
+즉 session record라고 해서 모든 field를 다음 세션에 유지하지 않는다.
+
+보존 예:
+- focus mode
+- debug mode
+- tool lock
+- export background
+- grid mode
+- screen/device 특성 일부
+- readonly config
+
+비보존 예:
+- current page
+- brush
+- cursor
+- scribble
+- chat message
+- hover state
+- open menus
+- duplicate temporary state
+- camera moving state
+
+따라서 tldraw의 상태 모델은 실제로:
+
+```text
+Level 1: record scope
+  document / session / presence
+
+Level 2: field lifecycle
+  preserve across sessions?
+  reset on load?
+
+Level 3: persistence destination
+  local / sync / snapshot
+```
+
+으로 이해하는 편이 정확하다.
+
+# 16. Store 생성 경로
+
+실제 `createTLStore.ts`:
+
+```mermaid
+flowchart TB
+  Options[TLStoreOptions]
+  Options --> Themes[resolve themes]
+  Options --> Utils[shape/binding/asset utils]
+  Utils --> Schema[createTLSchema]
+  Schema --> Store[new Store]
+  Options --> AssetStore[TLAssetStore]
+  Options --> UserStore[TLUserStore]
+  AssetStore --> StoreProps[TLStoreProps]
+  UserStore --> StoreProps
+  StoreProps --> Store
+  Snapshot[snapshot] --> Load[loadSnapshot]
+  Load --> Store
+```
+
+확장 가능 지점:
+- custom schema
+- shapeUtils
+- bindingUtils
+- assetUtils
+- migrations
+- custom records
+- asset adapter
+- user resolver
+- collaboration status/mode
+- onMount
+
+이 구조는 '편집기 생성 시 모든 서비스 기능을 Editor class에 직접 주입'하는 방식보다 훨씬 결합도가 낮다.
+
+# 17. Sync의 실제 책임 분해
+
+## Client
+
+`TLSyncClient`:
+- local Store와 socket 사이 diff 송수신
+- server clock 추적
+- protocol version
+- presence mode
+- network scheduling
+- remote error handling
+- reconnect 가능한 persistent socket contract
+
+공식 소스에서 solo mode와 collaborative mode의 network FPS도 별도로 둔다.
+
+## Server Room
+
+`TLSocketRoom`:
+- document별 authoritative room
+- WebSocket lifecycle
+- session map
+- presence
+- message chunking
+- readonly/session access
+- record authorizer
+- storage adapter
+- committed changes callback
+- hibernation용 session snapshot/resume
+
+## Sync Storage
+
+```text
+TLSyncStorage
+├─ InMemorySyncStorage
+├─ SQLiteSyncStorage
+├─ NodeSqliteWrapper
+└─ DurableObjectSqliteSyncWrapper
+```
+
+따라서 실제 구조는:
+
+```mermaid
+flowchart LR
+  Editor --> LocalStore
+  LocalStore --> SyncClient
+  SyncClient --> Socket
+  Socket --> SocketRoom
+  SocketRoom --> SyncRoom
+  SyncRoom --> SyncStorage
+  SyncRoom --> PresenceStore
+  SocketRoom --> SessionSnapshot[session snapshot/resume]
+```
+
+# 18. Sync 오류 모델
+
+실제 client/server contract에는 다음 fatal reason이 정의되어 있다.
+
+- NOT_FOUND
+- FORBIDDEN
+- NOT_AUTHENTICATED
+- UNKNOWN_ERROR
+- CLIENT_TOO_OLD
+- SERVER_TOO_OLD
+- INVALID_RECORD
+- RATE_LIMITED
+- ROOM_FULL
+- MESSAGE_TOO_LARGE
+
+즉 협업 기능을 설계할 때 단순 '연결 실패' 하나로 처리하지 않고 **권한·버전·데이터·용량·수용량 오류를 분리**하는 것이 중요하다.
+
+# 19. 서버 측 권한 구조
+
+현재 `TLSocketRoom`에는:
+- readonly session
+- object type 별 access
+- record create/update/delete authorizer
+- session metadata
+
+같은 제어 지점이 있다.
+
+이는 협업이 커지면:
+
+```text
+Can enter room?
+Can edit document?
+Can write specific object type?
+Can create/update/delete this record?
+```
+
+를 별도 권한으로 나눌 수 있음을 보여준다.
+
+# 20. 소스 근거
+
+- `packages/state/ARCHITECTURE.md`
+- `packages/store/src/lib/Store.ts`
+- `packages/store/src/lib/StoreSchema.ts`
+- `packages/store/src/lib/RecordType.ts`
+- `packages/tlschema/src/records/TLDocument.ts`
+- `packages/tlschema/src/records/TLInstance.ts`
+- `packages/tlschema/src/records/TLPresence.ts`
+- `packages/editor/src/lib/config/createTLStore.ts`
+- `packages/sync-core/src/lib/TLSyncClient.ts`
+- `packages/sync-core/src/lib/TLSocketRoom.ts`
+- `packages/sync-core/src/lib/TLSyncRoom.ts`
+
+이 문서의 구조 설명은 위 공개 source를 기준으로 작성했다.
