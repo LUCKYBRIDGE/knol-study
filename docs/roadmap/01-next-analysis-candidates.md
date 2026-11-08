@@ -1,5 +1,25 @@
 # 다음 분석 대상 로드맵
 
+## 진행 상태
+
+### 1차 분석 시작/완료
+- ✅ Penpot — 1차 심층 case 작성
+- ✅ AFFiNE — 1차 심층 case 작성
+- ✅ MakeCode / PXT — 1차 심층 case 작성
+- ✅ Padlet — 1차 제품 포렌식 case 작성
+
+### 다음 순서
+- ⏭ Scratch
+- ⏭ Node-RED
+- ⏭ Figma
+- ⏭ n8n
+- ⏭ Miro
+- ⏭ Book Creator
+- ⏭ Canva
+- ⏭ Genially
+
+---
+
 검토일: 2026-11-08
 
 현재 깊게 분석한 대상:
