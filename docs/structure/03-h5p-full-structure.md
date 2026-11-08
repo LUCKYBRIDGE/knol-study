@@ -376,3 +376,154 @@ Activity Manifest
 ```
 
 다만 실제 활동 타입이 충분히 반복된 뒤 도입해야 한다.
+
+
+# 17. Core PHP 클래스 구조
+
+공개 core의 책임을 클래스 단위로 보면 더 명확하다.
+
+```mermaid
+flowchart TB
+  F[H5PFrameworkInterface]
+  FS[H5PFileStorage]
+  Core[H5PCore]
+  Validator[H5PValidator]
+  ContentValidator[H5PContentValidator]
+  Storage[H5PStorage]
+  Export[H5PExport]
+  Event[H5PEventBase]
+
+  F --> Core
+  FS --> Core
+  Core --> Validator
+  Core --> ContentValidator
+  Core --> Storage
+  Core --> Export
+  Core --> Event
+```
+
+## H5PCore
+공통 H5P 기능과 core API/version, framework/file storage를 연결하는 중심 계층.
+
+## H5PValidator
+업로드된 H5P package의 구조와 library를 검증.
+
+## H5PContentValidator
+`semantics.json`을 기준으로 content params의 기본 타입·library dependency를 검증.
+
+## H5PStorage
+검증된 H5P package/library/content를 실제 host persistence에 저장하는 흐름을 담당.
+
+## H5PExport
+H5P content를 export package로 구성.
+
+## H5PFileStorage
+file system/object storage 등 실제 file 저장 방식을 추상화.
+
+이 구조는:
+- framework DB contract
+- binary/file storage contract
+- package validation
+- content semantic validation
+- 저장
+- export
+
+를 분리한다.
+
+# 18. Editor의 실제 widget hierarchy
+
+`h5p-editor-php-library/scripts`를 보면 generic editor가 단순 input renderer가 아니라 다양한 widget으로 나뉜다.
+
+```text
+Editor
+├─ Form
+├─ Group
+├─ List / ListEditor
+├─ Library selector
+├─ File / FileUploader
+├─ Image
+├─ AV
+├─ HTML / CKEditor
+├─ Text
+├─ Textarea
+├─ Number
+├─ Boolean
+├─ Select
+├─ Coordinates
+├─ Dimensions
+├─ Metadata
+└─ Semantic Structure
+```
+
+semantics의 field type/widget/importance를 이 widget layer가 실제 저작 UI로 번역한다.
+
+# 19. Library dependency의 세 층
+
+```text
+preloaded
+  시작 시 필요한 runtime dependency
+
+dynamic
+  필요 시 로드되는 dependency
+
+editor
+  authoring에만 필요한 dependency
+```
+
+이 구분은 교육 콘텐츠 plugin 시스템을 설계할 때 매우 유용하다.
+
+예:
+- 학생 player에 editor bundle을 넣지 않음
+- 드문 interaction type은 dynamic dependency
+- author-only helper는 editor dependency
+
+# 20. 업그레이드 시스템
+
+실제 content type repository에는 `upgrades.js`가 있다.
+
+따라서 versioning은 단순 manifest 숫자가 아니라:
+
+```text
+library version
++
+content params version compatibility
++
+upgrade function
++
+host-installed dependency version
+```
+
+의 문제다.
+
+H5P 구조의 복잡성은 여기서 크게 발생한다.
+
+# 21. H5P에서 가장 중요한 4개의 계약
+
+```text
+1. Host Contract
+   H5PFrameworkInterface
+
+2. File Contract
+   H5PFileStorage
+
+3. Type Contract
+   library.json
+
+4. Content Contract
+   semantics.json
+```
+
+이 네 계약이 H5P 플랫폼의 확장성을 만든다.
+
+# 22. Source Evidence
+
+- `h5p-php-library/h5p.classes.php`
+- `h5p-php-library/h5p-file-storage.interface.php`
+- `h5p-default-storage.class.php`
+- `h5p-editor-php-library/h5peditor.class.php`
+- `h5p-editor-php-library/scripts/h5peditor-*.js`
+- `h5p-multi-choice/library.json`
+- `h5p-multi-choice/semantics.json`
+- `h5p-multi-choice/upgrades.js`
+- `h5p-interactive-video/library.json`
+- `h5p-interactive-video/semantics.json`
