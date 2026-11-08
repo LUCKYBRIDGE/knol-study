@@ -81,3 +81,14 @@ docs/
 - **놀아트:** IndexedDB recovery와 project validation은 이미 존재합니다. 새 저장 엔진보다 상태 저장 정책 정리와 3D 작품별 viewpoint/guided route가 우선입니다.
 - **놀프린트:** 모든 원본을 자동 영속화하는 것은 현재의 개인정보·단순성 특성을 훼손할 수 있습니다. 필요하면 opt-in 임시 복구를 실험합니다.
 - **놀히스토리:** H5P식 activity registry나 Twine식 branching engine을 지금 구현하지 않습니다. 먼저 첫 핵심 학습 경험과 thin vertical prototype을 확정합니다.
+
+
+## 설계 레퍼런스
+
+분석 결과를 구현 우선순위와 별개로 **구조·설계·시스템·장단점 관점에서 다시 찾아볼 수 있게** 정리했습니다.
+
+- [설계 레퍼런스 시작점](docs/REFERENCE.md)
+- [도구별 구조·시스템·장단점](docs/systematic/07-tool-structures-pros-cons.md)
+- [재사용 가능한 구조·설계·시스템 패턴](docs/systematic/08-useful-system-patterns.md)
+
+새 서비스를 설계할 때는 먼저 패턴 카탈로그를 보고, 실제 Knol 프로젝트 적용 여부는 Fit–Gap과 의사결정표에서 별도로 판단합니다.
