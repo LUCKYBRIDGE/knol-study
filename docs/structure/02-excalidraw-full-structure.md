@@ -357,3 +357,156 @@ local / export / share / realtime
 ```
 
 특히 **“field별 저장 목적지 정책”**은 Knol 편집기 계열에 직접 적용 가치가 높다.
+
+
+# 16. 실제 변경 처리 구조 — Durable vs Ephemeral
+
+Excalidraw의 현재 core에는 `packages/element/src/store.ts`의 `Store`가 존재한다.
+
+핵심은 변경을 모두 동일하게 취급하지 않는다는 점이다.
+
+`CaptureUpdateAction`:
+
+```text
+IMMEDIATELY
+  local durable change
+  즉시 undo 대상
+
+NEVER
+  remote update / initialization 등
+  undo에 절대 기록하지 않음
+
+EVENTUALLY
+  drag/async multi-step 등
+  당장은 durable history로 확정하지 않음
+```
+
+Store는:
+- `DurableIncrement`
+- `EphemeralIncrement`
+
+를 구분해서 emit한다.
+
+```mermaid
+flowchart TB
+  Change[Element/AppState change]
+  Change --> Capture{Capture action}
+  Capture -->|IMMEDIATELY| Durable[Durable Increment]
+  Capture -->|NEVER| Ephemeral[Non-history / remote path]
+  Capture -->|EVENTUALLY| Pending[Ephemeral / later capture]
+  Durable --> History
+  Durable --> Sync[Sync listeners]
+  Ephemeral --> UI[Observers/UI]
+```
+
+이것은 tldraw의 record scope와 다른 축이다.
+
+- tldraw: **무슨 종류의 상태인가**
+- Excalidraw Store: **이번 변경을 어떻게 취급할 것인가**
+
+둘을 같이 참고할 가치가 높다.
+
+# 17. History는 snapshot 전체 복사가 아니라 Delta 기반
+
+`history.ts`:
+
+```text
+StoreSnapshot
+   ↓ compare
+StoreDelta
+   ↓ inverse
+HistoryDelta
+   ↓
+undoStack / redoStack
+```
+
+중요 세부:
+- element version/versionNonce는 history 복원에서 그대로 되돌리지 않음
+- undo/redo도 collaboration 관점에서는 새로운 user action처럼 version이 진행되어야 함
+- 단순 AppState change만으로 redo stack을 지우지 않음
+- 실제 element 변경이 있을 때 redo reset
+
+즉 history가 **협업과 충돌하지 않도록 별도 의미론**을 가진다.
+
+# 18. 저장 구조는 '상태 종류'와 '변경 종류' 두 축
+
+Excalidraw을 더 정확히 모델링하면:
+
+```text
+축 A: 무엇인가?
+- elements
+- appState
+- binary files
+
+축 B: 어디 저장하는가?
+- browser
+- export
+- server
+
+축 C: 이번 변경은 무엇인가?
+- durable
+- ephemeral
+- remote/non-history
+```
+
+따라서:
+
+```mermaid
+flowchart TB
+  State[Elements / AppState / Files]
+  State --> Policy[Storage Policy]
+  State --> Change[Change Capture Policy]
+  Policy --> Browser
+  Policy --> Export
+  Policy --> Server
+  Change --> History
+  Change --> Sync
+```
+
+# 19. FileManager 계층
+
+Hosted app은 binary file 처리를 `FileManager`로 분리한다.
+
+책임:
+- fetching 중 file 추적
+- error 상태
+- upload/save
+- file version
+- encoded upload
+- local manager / collaboration manager에서 재사용
+
+즉 binary asset는 단순 `Map<id, data>`가 아니라 별도 lifecycle manager를 가진다.
+
+# 20. Collaboration의 두 채널
+
+Excalidraw hosted collaboration은 실질적으로:
+
+```text
+Realtime channel
+  Socket.io
+  - scene broadcasts
+  - users
+  - pointer/presence
+
+Durable channel
+  Firebase
+  - encrypted scene
+  - binary files
+```
+
+로 분리된다.
+
+이 구조는 “WebSocket이 있으니 저장도 해결된다”는 오해를 막아준다.
+
+# 21. Source Evidence
+
+- `packages/element/src/store.ts`
+- `packages/excalidraw/history.ts`
+- `packages/excalidraw/appState.ts`
+- `packages/excalidraw/scene/Renderer.ts`
+- `packages/excalidraw/data/*`
+- `excalidraw-app/data/LocalData.ts`
+- `excalidraw-app/data/FileManager.ts`
+- `excalidraw-app/data/firebase.ts`
+- `excalidraw-app/collab/Collab.tsx`
+- `excalidraw-app/collab/Portal.tsx`
