@@ -95,3 +95,19 @@
 - [MakeCode / PXT](cases/makecode/README.md)
 - [Padlet](cases/padlet/README.md)
 - [다음 분석 로드맵](roadmap/01-next-analysis-candidates.md)
+
+
+## 서비스별 마스터 분석
+
+제품 하나를 처음부터 끝까지 볼 때는 [services/README.md](services/README.md)에서 시작합니다.
+
+현재:
+- [tldraw](services/tldraw/README.md)
+- [Excalidraw](services/excalidraw/README.md)
+- [H5P](services/h5p/README.md)
+- [Twine](services/twine/README.md)
+- [Artsteps / Metasteps](services/artsteps-metasteps/README.md)
+- [Penpot](services/penpot/README.md)
+- [AFFiNE](services/affine/README.md)
+- [MakeCode / PXT](services/makecode/README.md)
+- [Padlet](services/padlet/README.md)
