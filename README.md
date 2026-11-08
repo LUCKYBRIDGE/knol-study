@@ -48,3 +48,17 @@ docs/
   90-cross-analysis.md
   91-implementation-backlog.md
 ```
+
+
+## 심층 분석 (2026-11-08 보강)
+
+각 도구의 **실제 공개 문서 기반 구조**, 데이터 계약, 실패 모드, 기기별 테스트 기준을 더 상세히 정리했습니다.
+
+- [tldraw 기술·UX 심층 분석](docs/deep/01-tldraw-technical.md)
+- [H5P 콘텐츠 엔진 심층 분석](docs/deep/02-h5p-technical.md)
+- [Twine 분기 엔진 심층 분석](docs/deep/03-twine-technical.md)
+- [Artsteps 3D 관람 UX 심층 분석](docs/deep/04-artsteps-ux.md)
+- [Excalidraw 초보자 편집기 심층 분석](docs/deep/05-excalidraw-ux.md)
+- [검증 기록과 확인되지 않은 항목](docs/92-evidence-audit.md)
+
+**주의:** 이는 공식 문서와 공개 코드 설명을 대조한 구조 분석이며, `craft-anything` CLI로 대상 서비스를 직접 실행·계측한 결과는 아닙니다. UI 동작 테스트 및 실제 서비스 저장소와의 코드 대조는 별도 단계로 남겨두었습니다.
