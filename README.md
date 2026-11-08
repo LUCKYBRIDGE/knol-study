@@ -115,3 +115,17 @@ docs/
 - [기능 → 내부 메커니즘 지도](docs/forensics/09-feature-capability-mechanism-map.md)
 
 `docs/structure/`는 **무엇이 어디에 있는지**, `docs/forensics/`는 **왜 그렇게 풀었는지**를 담당합니다.
+
+
+## 추가 제품 Case Studies
+
+기존 5개 분석 이후 새로운 제품군도 제품별 case 형식으로 분석을 시작했습니다.
+
+- [Cases 인덱스](docs/cases/README.md)
+- [Penpot](docs/cases/penpot/README.md)
+- [AFFiNE](docs/cases/affine/README.md)
+- [Microsoft MakeCode / PXT](docs/cases/makecode/README.md)
+- [Padlet](docs/cases/padlet/README.md)
+- [다음 분석 대상 로드맵](docs/roadmap/01-next-analysis-candidates.md)
+
+새 case는 구조, 기능, 문제 해결 방식, 장단점, 재사용 패턴, Knol 적용, 근거와 Unknown을 한 제품 단위로 묶습니다.
