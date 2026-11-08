@@ -61,4 +61,23 @@ docs/
 - [Excalidraw 초보자 편집기 심층 분석](docs/deep/05-excalidraw-ux.md)
 - [검증 기록과 확인되지 않은 항목](docs/92-evidence-audit.md)
 
-**주의:** 이는 공식 문서와 공개 코드 설명을 대조한 구조 분석이며, `craft-anything` CLI로 대상 서비스를 직접 실행·계측한 결과는 아닙니다. UI 동작 테스트 및 실제 서비스 저장소와의 코드 대조는 별도 단계로 남겨두었습니다.
+**주의:** `craft-anything` CLI로 대상 서비스를 직접 실행·계측한 결과는 아닙니다. 다만 2026-11-08 재검토에서는 tldraw·H5P·Twine·Excalidraw의 공식 소스 구조와 **현재 Knol 저장소 main 코드까지 직접 대조**했습니다. 실제 브라우저 행동 계측·네트워크 trace는 아직 별도 증거 단계입니다.
+
+## 체계적 분석 v2 — 먼저 읽을 문서
+
+1차/심층 문서보다 더 엄격한 공통 기준과 현재 코드 대조를 사용합니다. **내용이 충돌할 경우 아래 v2 문서를 우선합니다.**
+
+- [분석 프레임워크 v2](docs/systematic/00-analysis-framework-v2.md) — A1~D 증거 등급 + 10개 공통 분석 축
+- [5개 도구 아키텍처 비교](docs/systematic/01-architecture-comparison.md)
+- [현재 Knol 저장소 Fit–Gap](docs/systematic/02-knol-fit-gap.md)
+- [재사용 설계 패턴 카탈로그](docs/systematic/03-pattern-catalog.md)
+- [리스크 레지스터](docs/systematic/04-risk-register.md)
+- [적용 실험 프로토콜](docs/systematic/05-experiment-protocols.md)
+- [현재 의사결정표](docs/systematic/06-decision-matrix.md)
+
+### 재분석 후 바뀐 핵심 판단
+
+- **놀스토리:** Twine의 변수·점수·조건·런타임 구조를 새로 도입하지 않습니다. 현재 main에 이미 더 정교한 StoryDocument/Flow/score/condition/Runtime Core가 존재합니다. Twine에서는 Story Map과 시각적 진단 UX를 가져옵니다.
+- **놀아트:** IndexedDB recovery와 project validation은 이미 존재합니다. 새 저장 엔진보다 상태 저장 정책 정리와 3D 작품별 viewpoint/guided route가 우선입니다.
+- **놀프린트:** 모든 원본을 자동 영속화하는 것은 현재의 개인정보·단순성 특성을 훼손할 수 있습니다. 필요하면 opt-in 임시 복구를 실험합니다.
+- **놀히스토리:** H5P식 activity registry나 Twine식 branching engine을 지금 구현하지 않습니다. 먼저 첫 핵심 학습 경험과 thin vertical prototype을 확정합니다.
