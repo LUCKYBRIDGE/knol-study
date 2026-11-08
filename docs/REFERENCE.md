@@ -85,3 +85,13 @@
 - [문제 → 메커니즘 카탈로그](forensics/07-problem-mechanism-catalog.md)
 - [품질·테스트 전략](forensics/08-quality-testing-strategy.md)
 - [기능 → 메커니즘 지도](forensics/09-feature-capability-mechanism-map.md)
+
+
+## 추가 제품 Case Studies
+
+- [Cases 인덱스](cases/README.md)
+- [Penpot](cases/penpot/README.md)
+- [AFFiNE](cases/affine/README.md)
+- [MakeCode / PXT](cases/makecode/README.md)
+- [Padlet](cases/padlet/README.md)
+- [다음 분석 로드맵](roadmap/01-next-analysis-candidates.md)
