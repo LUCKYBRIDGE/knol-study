@@ -337,3 +337,158 @@ Search / tags / structural navigation
 ```
 
 이다. Twine runtime을 이식할 필요는 없다.
+
+
+# 16. 실제 Story/Passage 타입에서 보이는 중요한 세부
+
+현재 `stories.types.ts` 기준:
+
+## Passage
+
+```text
+Passage
+├─ id
+├─ story
+├─ name
+├─ text
+├─ tags
+├─ left / top
+├─ width / height
+├─ selected
+└─ highlighted
+```
+
+## Story
+
+```text
+Story
+├─ id
+├─ ifid
+├─ name
+├─ passages[]
+├─ startPassage
+├─ storyFormat
+├─ storyFormatVersion
+├─ script
+├─ stylesheet
+├─ tags
+├─ tagColors
+├─ snapToGrid
+├─ zoom
+├─ selected
+└─ lastUpdate
+```
+
+중요한 점: Twine은 tldraw처럼 UI/session 상태를 완전히 별도 record type으로 분리하지 않는다.
+
+예:
+- passage.selected
+- passage.highlighted
+- story.selected
+- story.zoom
+
+같은 저작 UI 상태가 story data type 안에 들어 있다.
+
+# 17. 대신 Persistence 단계에서 '사소한 변경'을 필터링
+
+`persistable-changes.ts`:
+
+비영속 취급:
+- Passage: `highlighted`, `selected`
+- Story: `lastUpdate`, `selected`
+- StoryFormat: load state/error/selected 등
+
+즉 구조는:
+
+```text
+Domain object
+  content + some UI fields
+        ↓
+Change classifier
+  persistable?
+        ↓
+Persistence adapter
+```
+
+이다.
+
+이것은 tldraw의 type-level lifecycle 분리보다 느슨하지만 구현이 단순하다.
+
+### 설계적 장단점
+
+장점:
+- 한 story object만 보면 authoring 화면 복원에 필요한 정보가 많다.
+- reducer/action 구조가 단순하다.
+
+단점:
+- domain data와 editor-state 경계가 덜 명확하다.
+- export/persistence 필터 규칙을 놓치면 UI field가 새어 나갈 수 있다.
+
+KnolStory처럼 장기 저장·runtime contract가 중요한 시스템에서는 현재의 더 엄격한 document/runtime 경계를 유지하는 편이 낫다.
+
+# 18. Publish의 실제 binding
+
+`use-publishing.ts`:
+
+```mermaid
+flowchart TB
+  StoryContext[Stories Context]
+  FormatContext[Story Formats Context]
+  Prefs[Preferences]
+  StoryContext --> Hook[usePublishing]
+  FormatContext --> Hook
+  Prefs --> Hook
+  Hook --> Load[loadFormatProperties]
+  Load --> Source[Story Format source]
+  Source --> Bind[publishStoryWithFormat]
+  StoryContext --> Bind
+  Bind --> HTML[Published HTML]
+```
+
+Proofing은 별도의 proofing format을 사용할 수 있고, 일반 publish는 story가 지정한 format/version을 사용한다.
+
+즉:
+- authoring story data
+- selected runtime/compiler format
+의 binding이 publish 순간 일어난다.
+
+# 19. IFID와 내부 ID의 분리
+
+Story에는:
+- `id`: 현재 Twine application 내부 식별
+- `ifid`: import/export 후에도 유지되어야 하는 작품 식별
+
+이 구분은 매우 유용하다.
+
+```text
+Local/editor identity
+≠
+Portable content identity
+```
+
+작품 사본, import/export, 공유 포맷을 설계할 때 참고 가치가 크다.
+
+# 20. Story Format Extension의 안전 경계
+
+공식 extension 설계:
+- extension은 format에 bundle
+- extension이 없더라도 story format 자체는 사용 가능해야 함
+- 사용자 disable 가능
+- Twine version range 지정
+- overlapping version specifier 금지 권고
+- editor mode/toolbar/reference parser 등으로 범위를 제한
+
+즉 plugin이 core를 무제한 mutate하는 모델보다 **버전이 있는 제한된 extension contract**에 가깝다.
+
+# 21. Source Evidence
+
+- `src/store/stories/stories.types.ts`
+- `src/store/stories/reducer/*`
+- `src/store/undoable-stories/*`
+- `src/store/persistence/persistable-changes.ts`
+- `src/store/persistence/local-storage/*`
+- `src/store/persistence/electron-ipc/*`
+- `src/store/use-publishing.ts`
+- `src/util/publish.ts`
+- `DESIGN_GOALS.md`
+- `EXTENDING.md`
