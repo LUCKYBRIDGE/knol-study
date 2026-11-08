@@ -63,3 +63,11 @@
 - [5개 도구 전체 구조 비교](structure/06-cross-structure-map.md)
 
 구조도는 **제품 경계 → 저장소/모듈 → 데이터·상태 → 런타임 → 저장·공유·확장**의 5개 층으로 정리되어 있습니다.
+
+
+### 구조를 더 깊게 검증할 때
+- [소스 근거 지도](structure/07-source-evidence-map.md)
+- [데이터·상태 생명주기 비교](structure/08-data-lifecycle-matrix.md)
+- [쓰기·읽기·저장·실패 흐름](structure/09-read-write-persistence-failure-flows.md)
+- [완성도·Unknown 관리](structure/10-completeness-and-unknowns.md)
+- [완전 구조 분석 템플릿](structure/11-full-architecture-analysis-template.md)
