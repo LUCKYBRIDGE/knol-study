@@ -248,3 +248,151 @@ Guided route
 - https://blog.artsteps.com/about
 - https://blog.artsteps.com/artsteps-make-your-own-virtual-exhibitions-1cbdc3a36146
 - https://blog.artsteps.com/
+
+
+# 15. 2025 이후 진화 — Metasteps에서 확인되는 구조적 방향
+
+Artsteps 공식 채널은 2025-09-15에 Metasteps를 Artsteps의 next-generation evolution으로 설명했다.
+
+확인되는 요구 변화:
+- 더 자유로운 no-code 3D design
+- realistic lighting/materials
+- 더 많은 interactivity
+- access control / member management
+- scalability
+
+그리고 새로운 개념이 구체적으로 공개되었다.
+
+## Portal
+
+서로 다른 3D 공간을 연결.
+
+```text
+Space A
+  ↓ portal
+Space B
+  ↓ portal
+Space C
+```
+
+이는 단일 room/exhibition에서 **space graph**로 확장되는 구조다.
+
+## Info Point
+
+공간 객체에 맥락/설명 정보를 연결.
+
+```text
+Spatial Object
+     ↓
+Info Point
+     ↓
+Context / explanation / interaction
+```
+
+## Guided Paths
+
+하나의 공간에 여러 narrative flow를 설계할 수 있다고 명시한다.
+
+기존 '하나의 guide sequence'보다 발전된 개념:
+
+```text
+Environment
+├─ Path A: 초보 관람
+├─ Path B: 심화 관람
+└─ Path C: 특정 주제 관람
+```
+
+교육 서비스에는 특히 가치가 크다.
+
+## Webviews
+
+3D 공간에 live web content embedding:
+- survey
+- questionnaire
+- web form
+- collaboration platform
+- presentation
+
+구조적으로 보면:
+
+```text
+3D Scene
+  ├─ native artifact
+  ├─ media artifact
+  └─ web surface / embedded application
+```
+
+로 확장된다.
+
+## Access Control
+
+공식 설명:
+- member-only access
+- role-based permissions
+- Districts branded hub
+- self-service management
+
+따라서 제품 논리 구조는 최소:
+
+```text
+Account
+  ↓
+Membership
+  ↓
+Role
+  ↓
+District / Space
+  ↓
+Permission
+```
+
+까지 확장된 것으로 볼 수 있다.
+
+# 16. Artsteps → Metasteps 구조 진화의 의미
+
+```mermaid
+flowchart LR
+  A[Artsteps]
+  A --> Room[Single 3D exhibition]
+  A --> Artifact
+  A --> Guide
+
+  M[Metasteps evolution]
+  M --> Multi[Multiple connected spaces]
+  M --> Portal
+  M --> Info[Info Points]
+  M --> Paths[Multiple Guided Paths]
+  M --> Webviews
+  M --> RBAC[Role-based access]
+  M --> District[Branded hub]
+```
+
+이것은 놀아트의 당장 구현 범위를 늘리라는 뜻이 아니다.
+
+오히려 장기적으로 전시 시스템이 커질 때:
+- 작품
+- 관람점
+- 투어
+- 공간
+- 공간 연결
+- 역할/권한
+
+을 각각 별도 개념으로 두는 것이 유리하다는 참고 자료다.
+
+# 17. 최신 공식 근거
+
+2025-09-15 공식 ArtSteps 채널:
+- Artsteps가 수년간 3D 전시·교육·스토리텔링에 사용됨
+- Metasteps를 차세대 진화로 소개
+- Portals
+- Info Points
+- Guided Paths
+- Webviews
+- member-only access
+- role-based permissions
+- Districts
+
+원문:
+https://blog.artsteps.com/from-artsteps-to-metasteps-the-next-chapter-in-immersive-creation-5ddb6bc90a72
+
+이 기능들의 **제품 존재는 확인**되지만, 내부 기술 구현은 여전히 Unknown이다.
