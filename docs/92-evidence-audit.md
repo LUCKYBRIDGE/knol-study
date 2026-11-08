@@ -57,3 +57,21 @@
 - 놀히스토리는 아직 핵심 경험을 고정하지 않은 Foundation 단계임.
 
 따라서 초기 문서와 충돌하는 경우 `docs/systematic/` 분석을 우선한다.
+
+
+## 2026-11-08 포렌식 분석 추가 검증
+
+추가로 공식 source/test를 직접 대조함:
+
+- tldraw: `StateNode`, `ShapeUtil`, Editor manager topology, `TLSyncClient`, `TLSocketRoom`, sync fuzz, upgrade/downgrade tests.
+- Excalidraw: `ActionManager`, element Store의 durable/ephemeral increment, delta History, reconciliation convergence tests, LocalData/FileManager/Firebase/Portal.
+- H5P: package validator의 whitelist/size/manifest validation, core/editor class boundaries, 공식 security model, Question type contract의 `getCurrentState()`.
+- Twine: 실제 Story/Passage type, persistable-change filter, publish binding, broken/self connection accessibility tests, 공식 Story Map/Design Goals.
+- Artsteps/Metasteps: 공식 제품 설명 및 2025 Metasteps 진화에서 Portal, Info Point, Guided Paths, Webviews, member/role/District 기능 확인.
+
+남은 미검증:
+- 실제 브라우저 상호작용 계측
+- network trace
+- 성능 profiling
+- Artsteps/Metasteps 비공개 내부 기술 구현
+- H5P 특정 LMS host implementation별 DB/운영 구조
