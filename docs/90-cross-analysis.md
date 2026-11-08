@@ -1,5 +1,7 @@
 # 90. 교차 분석
 
+> **v2 정정:** 이 문서는 초기 교차 분석입니다. 현재 Knol 저장소 main과 외부 공식 소스를 대조한 최신 판단은 [체계적 아키텍처 비교](systematic/01-architecture-comparison.md)와 [Fit–Gap 분석](systematic/02-knol-fit-gap.md)을 우선합니다.
+
 ## 핵심 결론
 
 다섯 도구를 함께 보면 서로 경쟁 관계라기보다 서로 다른 문제를 잘 푼 사례에 가깝습니다.
@@ -8,7 +10,7 @@
 |---|---|---|---|
 | tldraw | 복잡한 편집기 상태 | document / session / history / sync 분리 | 놀아트, 놀프린트 |
 | H5P | 교육활동 확장성 | content type registry + schema + package | 놀퀴즈, 신규 교육도구 |
-| Twine | 분기 복잡도 | node / edge / state / runtime 분리 | 놀스토리, 놀히스토리 |
+| Twine | 분기 저작·진단 | Story Map, broken link, 검색·태그, 조건 디버깅 | 놀스토리 저작 UX; 놀히스토리는 핵심 경험 결정 후 |
 | Artsteps | 3D 관람 동선 | free roam + guided route + artifact | 놀아트 전시실 |
 | Excalidraw | 초보자 UX | progressive disclosure + local-first | 놀아트, 놀프린트 |
 
@@ -95,7 +97,7 @@ tldraw과 Excalidraw의 local-first 접근에서 가져올 점:
 - export/import 탈출구
 - 네트워크가 없어도 최소 기능 유지
 
-놀퀴즈 계열에서 공통 AutosaveAdapter를 만드는 것이 여러 서비스에 반복적으로 도움이 될 가능성이 큽니다.
+공통 AutosaveAdapter를 즉시 추출하지 않습니다. 놀아트는 이미 IndexedDB recovery가 있고 놀프린트는 원본 비영속이 의도된 특성입니다. 각 서비스에서 실제로 같은 문제가 반복됨을 확인한 뒤 공통 모듈을 추출합니다.
 
 ## 5. 다섯 번째 원리: 초보자에게 전체 기능을 보여주지 않기
 
@@ -227,11 +229,12 @@ H5P에서 얻을 수 있는 중요한 교훈:
 - 놀아트/놀프린트 UI를 Always / Contextual / Advanced로 재분류
 - 공통 auto-save / recovery 패턴
 
-### P1 — 구조 부채를 줄이는 것
+### P1 — 구조 부채와 저작 UX를 줄이는 것
 
-- 놀스토리 graph validator
-- story flag / score condition
-- 콘텐츠 schemaVersion / migration 규칙
+- 놀스토리 Story Map + 오류 간선 시각화
+- 놀스토리 cycle 허용 정책 재검토
+- 저장 목적지별 상태 정책(browser/export/share/realtime/history) 문서화
+- 기존 schemaVersion/migration fixture 강화
 
 ### P2 — 확장 기반
 
@@ -247,11 +250,11 @@ H5P에서 얻을 수 있는 중요한 교훈:
 가장 좋은 조합은:
 
 ```text
-tldraw의 상태 모델
-+ H5P의 콘텐츠 타입 구조
-+ Twine의 그래프/상태 모델
-+ Artsteps의 관람 동선
-+ Excalidraw의 노출 절제
+tldraw의 lifecycle scope
++ Excalidraw의 저장 목적지별 state policy
++ H5P의 versioned content manifest
++ Twine의 Story Map/진단 UX
++ Artsteps의 guide-point 관람 개념
 ```
 
 를 각 서비스의 문제에 맞게 선택적으로 적용하는 것입니다.
