@@ -45,3 +45,14 @@
 - 확장 기능은 core 수정 없이 추가 가능한가?
 - 버전이 바뀌었을 때 오래된 결과물을 어떻게 살리는가?
 - hosted service 기능과 embeddable library 기능의 경계는 어디인가?
+
+
+## 심층 보조 문서
+
+- [소스 근거 지도](07-source-evidence-map.md)
+- [데이터·상태 생명주기 비교](08-data-lifecycle-matrix.md)
+- [쓰기·읽기·저장·실패 흐름](09-read-write-persistence-failure-flows.md)
+- [분석 완성도와 미확인 영역](10-completeness-and-unknowns.md)
+- [새 도구용 완전 구조 분석 템플릿](11-full-architecture-analysis-template.md)
+
+앞으로 새 도구는 가능하면 이 템플릿의 30개 항목으로 분석한다.
