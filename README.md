@@ -102,3 +102,16 @@ docs/
 - [5개 도구 구조 비교 지도](docs/structure/06-cross-structure-map.md)
 
 공개 소스가 없는 Artsteps는 내부 구현을 추측으로 확정하지 않고, 공식적으로 확인 가능한 제품 구조와 논리적 추론 구조를 구분했습니다.
+
+
+## 제품 포렌식 분석 — 구조가 문제를 푸는 방식
+
+구조도보다 한 단계 더 깊게, 각 제품이 **어떤 문제를 왜 이런 구조로 풀었는지** 분석했습니다.
+
+- [포렌식 분석 시작점](docs/forensics/README.md)
+- [같은 문제를 서로 다르게 푼 방식](docs/forensics/06-same-problem-different-solution.md)
+- [문제 → 설계 메커니즘 카탈로그](docs/forensics/07-problem-mechanism-catalog.md)
+- [테스트·품질 전략 비교](docs/forensics/08-quality-testing-strategy.md)
+- [기능 → 내부 메커니즘 지도](docs/forensics/09-feature-capability-mechanism-map.md)
+
+`docs/structure/`는 **무엇이 어디에 있는지**, `docs/forensics/`는 **왜 그렇게 풀었는지**를 담당합니다.
